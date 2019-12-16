@@ -1,0 +1,30 @@
+{
+  "name": "dalkify",
+  "version": "0.0.0",
+  "description": "",
+  "source": "src/dalkify.ts",
+  "main": "dist/dalkify.js",
+  "module": "dist/dalkify.mjs",
+  "unpkg": "dist/dalkify.umd.js",
+  "scripts": {
+    "build": "microbundle --no-sourcemap",
+    "dev": "microbundle watch --no-sourcemap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnlow/Dalkify.git"
+  },
+  "keywords": [],
+  "author": "Gnlow",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gnlow/Dalkify/issues"
+  },
+  "homepage": "https://github.com/gnlow/Dalkify#readme",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "microbundle": "^0.12.0-next.6"
+  }
+}
