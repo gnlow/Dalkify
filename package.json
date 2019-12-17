@@ -26,5 +26,8 @@
   ],
   "devDependencies": {
     "microbundle": "^0.12.0-next.6"
+  },
+  "dependencies": {
+    "dalkak": "^0.3.0"
   }
 }
