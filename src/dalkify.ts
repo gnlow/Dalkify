@@ -9,9 +9,9 @@ export function inject(pack: Pack, Entry){
         blocks.push(pack.blocks[block]);
     }
     Entry.variableContainer.appendFunctions([
-        blocks.map( block => ({id: block.name}) )
+        blocks.map( block => ({id: `dalk_${block.name}`}) )
     ]);
-    blocks.forEach( block => Entry.block[`func_${block.name}`] =  convertBlock(block) );
+    blocks.forEach( block => Entry.block[`func_dalk_${block.name}`] =  convertBlock(block) );
 }
 
 function convertBlock(dalkBlock: Block){
