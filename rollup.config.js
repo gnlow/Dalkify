@@ -4,7 +4,8 @@ export default {
     input: "src/dalkify.ts",
     output: {
         dir: ".",
-        format: "iife"
+        format: "iife",
+        name: "dalkify"
     },
     plugins: [typescript()]
 }

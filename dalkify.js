@@ -1,4 +1,4 @@
-(function (exports) {
+var dalkify = (function (exports) {
     'use strict';
 
     function inject(pack, Entry) {
