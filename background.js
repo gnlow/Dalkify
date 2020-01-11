@@ -1,7 +1,7 @@
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.url) {
-        var url = new URL(changeInfo.url);
-        if (url.pathname.length >= 4 || url.pathname == "/ws") {
+    if (changeInfo.status == "complete") {
+        var url = new URL(tab.url);
+        if (url.pathname.length > 4 || url.pathname == "/ws") {
             chrome.tabs.executeScript(
                 null, {
                     file: "dalkify.js"
