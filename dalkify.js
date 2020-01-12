@@ -2,7 +2,7 @@ var dalkify = (function (exports) {
     'use strict';
 
     function inject(pack, Entry) {
-        var blocks;
+        var blocks = [];
         for (var block in pack.blocks.value) {
             blocks.push(pack.blocks.value[block]);
         }

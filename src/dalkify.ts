@@ -4,7 +4,7 @@ import {
 } from "dalkak"
 
 export function inject(pack: Pack, Entry){
-    let blocks: Array<Block>;
+    let blocks: Array<Block> = [];
     for(var block in pack.blocks.value){
         blocks.push(pack.blocks.value[block]);
     }
