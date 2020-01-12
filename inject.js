@@ -1,11 +1,15 @@
 try{
-    log("inject start")
+    dalkLog("inject start");
     dalkify.inject(sample, Entry);
-    log("inject end")
+    dalkLog("inject end");
 }catch(e){
-    log(e);
+    dalkErr(e);
+    dalkErr("inject failed");
 }
     
-function log(text) {
-    console.log(`Dalkify | ${text}`);
+function dalkLog(text) {
+    console.log(`%c Dalkify %c ${text} `, "background: #F56EC1; color: #FFF", "background: #FFCCDB; color: #000");
+}
+function dalkErr(text) {
+    console.log(`%c Dalkify %c ${text} `, "background: #F56EC1; color: #FFF", "background: #FFF; color: red");
 }
