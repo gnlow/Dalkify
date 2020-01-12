@@ -8,10 +8,10 @@ export function inject(pack: Pack, Entry){
     for(var block in pack.blocks.value){
         blocks.push(pack.blocks.value[block]);
     }
-    Entry.variableContainer.appendFunctions([
-        blocks.map( block => ({id: `dalk_${block.name}`}) )
-    ]);
-    blocks.forEach( block => Entry.block[`func_dalk_${block.name}`] =  convertBlock(block) );
+    Entry.variableContainer.appendFunctions(
+        blocks.map( block => ({id: `dalk_${block.name.key}`}) )
+    );
+    blocks.forEach( block => Entry.block[`func_dalk_${block.name.key}`] =  convertBlock(block) );
 }
 
 function convertBlock(dalkBlock: Block){
