@@ -4,6 +4,7 @@ try{
     dalkLog("inject end");
 }catch(e){
     dalkErr(e);
+    throw e;
     dalkErr("inject failed");
 }
     
