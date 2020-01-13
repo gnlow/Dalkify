@@ -1,7 +1,10 @@
 import {
     Pack,
-    Block
+    Block,
+    Template,
+    Type
 } from "dalkak"
+import { Param } from "dalkak/dist/src/Param";
 
 export function inject(pack: Pack, Entry) {
     let blocks: Array < Block > = [];
@@ -30,8 +33,36 @@ export function inject(pack: Pack, Entry) {
 }
 
 export function convertBlock(dalkBlock: Block, Entry) {
+    var params: {
+        value: any,
+        type: Type,
+        name: string
+    }[] = [];
+    for(var x in dalkBlock.params.value){
+        params.push({
+            value: dalkBlock.params.value[x].run(),
+            type: dalkBlock.paramTypes.value[x],
+            name: x
+        });
+    }
+    var template = dalkBlock.template.template;
+    params.forEach((param, i) => {
+        template = template.replace(Template.addBracket(param.name, param.type), `%${i+1}`);
+    });
+    var func = (object, block) => {
+        block.block.params.forEach((x, i) => params[i].value = x.data.params[0]);
+        var objParam = {};
+        params.forEach(x => {
+            objParam[x.name] = x.value;
+        });
+        return dalkBlock.func(objParam);
+    }
     return {
-        template: dalkBlock.export(),
-        func: dalkBlock.func
+        template,
+        func,
+        params: params.map(o => ({
+            type: "Block",
+            accept: o.type.name.key
+        }))
     }
 }

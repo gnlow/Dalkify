@@ -1,4 +1,4 @@
-var dalkify = (function (exports) {
+var dalkify = (function (exports, dalkak) {
     'use strict';
 
     function inject(pack, Entry) {
@@ -26,9 +26,33 @@ var dalkify = (function (exports) {
         });
     }
     function convertBlock(dalkBlock, Entry) {
+        var params = [];
+        for (var x in dalkBlock.params.value) {
+            params.push({
+                value: dalkBlock.params.value[x].run(),
+                type: dalkBlock.paramTypes.value[x],
+                name: x
+            });
+        }
+        var template = dalkBlock.template.template;
+        params.forEach(function (param, i) {
+            template = template.replace(dalkak.Template.addBracket(param.name, param.type), "%" + (i + 1));
+        });
+        var func = function (object, block) {
+            block.block.params.forEach(function (x, i) { return params[i].value = x.data.params[0]; });
+            var objParam = {};
+            params.forEach(function (x) {
+                objParam[x.name] = x.value;
+            });
+            return dalkBlock.func(objParam);
+        };
         return {
-            template: dalkBlock.export(),
-            func: dalkBlock.func
+            template: template,
+            func: func,
+            params: params.map(function (o) { return ({
+                type: "Block",
+                accept: o.type.name.key
+            }); })
         };
     }
 
@@ -37,4 +61,4 @@ var dalkify = (function (exports) {
 
     return exports;
 
-}({}));
+}({}, dalkak));
