@@ -4,12 +4,9 @@ import {
     Template,
     Type
 } from "dalkak"
-import {
-    Param
-} from "dalkak/dist/src/Param";
 
 export function inject(pack: Pack, Entry) {
-    let blocks: Array < Block > = [];
+    let blocks: Array <Block> = [];
     for (var block in pack.blocks.value) {
         blocks.push(pack.blocks.value[block]);
     }
