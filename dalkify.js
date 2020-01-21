@@ -6,54 +6,72 @@ var dalkify = (function (exports, dalkak) {
         for (var block in pack.blocks.value) {
             blocks.push(pack.blocks.value[block]);
         }
-        /*
-        Entry.variableContainer.appendFunctions(
-            blocks.map(block => new Entry.Func({
-                id: `dalk_${block.name.key}`
-            }))
-        );
-        blocks.forEach(block => Entry.block[`func_dalk_${block.name.key}`] = convertBlock(block, Entry));
-        */
         blocks.forEach(function (block) {
-            Entry.variableContainer.appendFunctions([{
-                    id: "dalk_" + block.name.key
-                }]);
-            console.log(Entry.block["func_dalk_" + block.name.key]);
-            //Entry.do('funcEditStart', block.name.key);
-            //Entry.block[`func_dalk_${block.name.key}`] = convertBlock(block, Entry);
-            Object.assign(Entry.block["func_dalk_" + block.name.key], convertBlock(block));
-            //Entry.do('funcEditEnd', 'save');
+            if (!Entry.variableContainer.functions_["dalk_" + block.name.key]) {
+                var convertedBlock = convertBlock(block, Entry);
+                Entry.variableContainer.setFunctions([{
+                        id: "dalk_" + block.name.key,
+                        content: JSON.stringify([
+                            [convertedBlock]
+                        ])
+                    }]);
+            }
+            var params = [];
+            for (var x in block.params.value) {
+                params.push({
+                    value: block.params.value[x].run(),
+                    type: block.paramTypes.value[x],
+                    name: x
+                });
+            }
+            var func = function (object, script) {
+                script.block.params.forEach(function (x, i) { if (params[i]) {
+                    params[i].value = x.data.params[0];
+                } });
+                var objParam = {};
+                params.forEach(function (x) {
+                    objParam[x.name] = x.value;
+                });
+                return block.func(objParam);
+            };
+            Entry.block["func_dalk_" + block.name.key].func = func;
         });
     }
     function convertBlock(dalkBlock, Entry) {
-        var params = [];
-        for (var x in dalkBlock.params.value) {
-            params.push({
-                value: dalkBlock.params.value[x].run(),
-                type: dalkBlock.paramTypes.value[x],
-                name: x
-            });
-        }
+        var entBlock = {
+            type: "function_create",
+            params: []
+        };
+        var blockPointer = entBlock;
         var template = dalkBlock.template.template;
-        params.forEach(function (param, i) {
-            template = template.replace(dalkak.Template.addBracket(param.name, param.type), "%" + (i + 1));
+        for (var _i = 0, _a = dalkBlock.params.namespace.names; _i < _a.length; _i++) {
+            var paramName = _a[_i];
+            var param = dalkBlock.params.value[paramName];
+            template = template.replace(dalkak.Template.addBracket(param.name.key, param.returnType), "(" + param.name.key + ")");
+        }
+        template.split(/[({<)}>]/).forEach(function (x, i) {
+            if (x) {
+                if (i % 2 == 0) {
+                    blockPointer.params.push({
+                        type: "function_field_label",
+                        params: [
+                            x
+                        ]
+                    });
+                    blockPointer = blockPointer.params[0];
+                }
+                else {
+                    blockPointer.params.push({
+                        type: "function_field_string",
+                        params: [{
+                                type: "stringParam_" + Entry.Utils.generateId()
+                            }]
+                    });
+                    blockPointer = blockPointer.params[0];
+                }
+            }
         });
-        var func = function (object, block) {
-            block.block.params.forEach(function (x, i) { return params[i].value = x.data.params[0]; });
-            var objParam = {};
-            params.forEach(function (x) {
-                objParam[x.name] = x.value;
-            });
-            return dalkBlock.func(objParam);
-        };
-        return {
-            template: template,
-            func: func,
-            params: params.map(function (o) { return ({
-                type: "Block",
-                accept: o.type.name.key
-            }); })
-        };
+        return entBlock;
     }
 
     exports.convertBlock = convertBlock;
