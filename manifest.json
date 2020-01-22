@@ -12,7 +12,7 @@
   ],
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["https://playentry.org/*"],
       "js": ["content.js"],
       "all_frames": true
     }

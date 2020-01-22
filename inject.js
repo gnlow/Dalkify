@@ -1,16 +1,23 @@
-try{
-    dalkLog("inject start");
-    dalkify.inject(sample, Entry);
-    dalkLog("inject end");
-}catch(e){
-    dalkErr(e);
-    throw e;
+if ("Entry" in window && Entry.variableContainer) {
+    try {
+        dalkLog("inject start");
+        dalkify.inject(sample, Entry);
+        dalkLog("inject end");
+    } catch (e) {
+        dalkErr(e);
+        dalkErr("inject failed");
+        throw e;
+    }
+}else{
+    dalkErr("project not found");
     dalkErr("inject failed");
 }
-    
+
+
 function dalkLog(text) {
     console.log(`%c Dalkify %c ${text} `, "background: #F56EC1; color: #FFF", "background: #FFCCDB; color: #000");
 }
+
 function dalkErr(text) {
     console.log(`%c Dalkify %c ${text} `, "background: #F56EC1; color: #FFF", "background: #FFF; color: red");
 }
