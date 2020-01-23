@@ -7,15 +7,10 @@ window.addEventListener("load",
                 log("dalkak loaded")
                 injectScript(chrome.extension.getURL("dalkify.js"), "body").addEventListener("load",
                     () => {
-                        log("dalkify loaded")
-                        injectScript("https://unpkg.com/@dalkak/sample", "body").addEventListener("load",
-                            () => {
-                                log("package loaded")
-                                injectScript(chrome.extension.getURL("inject.js"), "body").addEventListener("load", () => {
-                                    
-                                })
-                            }
-                        )
+                        log("package loaded")
+                        injectScript(chrome.extension.getURL("inject.js"), "body").addEventListener("load", () => {
+
+                        })
                     }
                 )
             }

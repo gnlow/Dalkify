@@ -1,14 +1,33 @@
+var load = url => new Promise((o, x) => {
+    $("script").load(url, null, (res, stat) => {
+        if (stat == "error") {
+            x("package loading error");
+        } else {
+            o();
+        }
+    });
+});
+
 if ("Entry" in window && Entry.variableContainer) {
-    try {
-        dalkLog("inject start");
-        dalkify.inject(sample, Entry);
-        dalkLog("inject end");
-    } catch (e) {
-        dalkErr(e);
-        dalkErr("inject failed");
-        throw e;
-    }
-}else{
+    (async () => {
+        try {
+            dalkLog("inject start");
+            var packList = Entry.variableContainer.getListByName("dalk_pack").getArray()
+            for (var packName of packList) {
+                dalkLog("loading: " + packName.data);
+                await load("https://unpkg.com/" + packName.data);
+                dalkify.inject(window[packName.data], Entry);
+                dalkLog("injected: " + packName.data);
+            }
+            dalkLog("inject end");
+            dalkLog(`${packList.length} package${packList.length > 1?"s":""} injected`);
+        } catch (e) {
+            dalkErr(e);
+            dalkErr("inject failed");
+            throw e;
+        }
+    })();
+} else {
     dalkErr("project not found");
     dalkErr("inject failed");
 }
