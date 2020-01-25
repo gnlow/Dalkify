@@ -66,7 +66,12 @@ var dalkify = (function (exports, dalkak) {
                 params.forEach(function (x) {
                     objParam[x.name] = script.getValue(x.name, script);
                 });
-                return block.func(objParam);
+                return block.func(objParam, {
+                    platform: "Entry",
+                    data: {
+                        Entry: Entry
+                    }
+                });
             };
             Entry.block["func_dalk_" + block.name.key].func = func;
             Entry.block["func_dalk_" + block.name.key].paramsKeyMap = paramsKeyMap;

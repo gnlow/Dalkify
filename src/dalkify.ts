@@ -75,7 +75,12 @@ export function inject(pack: Pack, Entry) {
             params.forEach(x => {
                 objParam[x.name] = script.getValue(x.name, script);
             });
-            return block.func(objParam);
+            return block.func(objParam, {
+                platform: "Entry", 
+                data: {
+                    Entry
+                }
+            });
         }
         Entry.block["func_dalk_" + block.name.key].func = func;
         Entry.block["func_dalk_" + block.name.key].paramsKeyMap = paramsKeyMap;
