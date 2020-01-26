@@ -31,9 +31,11 @@ if ("Entry" in window && Entry.variableContainer) {
 
 
 function dalkLog(text) {
+    (new Entry.Toast).success("Dalkify", text);
     console.log(`%c Dalkify %c ${text} `, "background: #F56EC1; color: #FFF", "background: #FFCCDB; color: #000");
 }
 
 function dalkErr(text) {
+    (new Entry.Toast).alert("Dalkify", text);
     console.log(`%c Dalkify %c ${text} `, "background: #F56EC1; color: #FFF", "background: #FFF; color: red");
 }
