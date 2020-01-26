@@ -17,30 +17,33 @@ var dalkify = (function (exports, dalkak) {
             var i = 0;
             for (var paramName in block.params.value) { //순서 보장 못함. 수정 필요
                 var param = block.params.value[paramName];
-                console.log(param);
+                //console.log(param)
                 template = template.replace(dalkak.Template.addBracket(paramName, param.returnType), "(" + paramName + ")");
                 paramsKeyMap[paramName] = i;
                 i++;
             }
+            console.log(template.split(/[({<)}>]/));
             template.split(/[({<)}>]/).forEach(function (x, i) {
                 if (x) {
                     if (i % 2 == 0) {
+                        console.log(blockPointer);
                         blockPointer.params.push({
                             type: "function_field_label",
                             params: [
                                 x
                             ]
                         });
-                        blockPointer = blockPointer.params[0];
+                        blockPointer = blockPointer.params[blockPointer.params.length - 1];
                     }
                     else {
+                        console.log(blockPointer);
                         blockPointer.params.push({
                             type: "function_field_string",
                             params: [{
                                     type: "stringParam_" + Entry.Utils.generateId()
                                 }]
                         });
-                        blockPointer = blockPointer.params[0];
+                        blockPointer = blockPointer.params[blockPointer.params.length - 1];
                     }
                 }
             });

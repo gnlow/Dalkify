@@ -1,11 +1,8 @@
 var load = url => new Promise((o, x) => {
-    $("script").load(url, null, (res, stat) => {
-        if (stat == "error") {
-            x("package loading error");
-        } else {
-            o();
-        }
-    });
+    var sc = document.createElement("script");
+    sc.src = url;
+    sc.addEventListener("load", o);
+    document.body.appendChild(sc);
 });
 
 if ("Entry" in window && Entry.variableContainer) {
