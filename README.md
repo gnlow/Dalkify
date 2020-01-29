@@ -8,5 +8,5 @@
 블록 패키지는 [npm](https://npm.im/) 기반으로 배포됩니다. (Dalkify는 클라이언트에서 [unpkg](https://unpkg.com)를 이용해 패키지를 불러옵니다.)
 
 블록 패키지 예시:
-- [Kachi](https:/github.com/Dalkak/Kachi/): WebSocket 관련 기능을 제공합니다.
-- [JSON](https:/github.com/Dalkak/JSON/): JSON 및 Object 관련 기능을 제공합니다.
+- [@dalkak/kachi](https:/github.com/Dalkak/Kachi/): WebSocket 관련 기능을 제공합니다.
+- [@dalkak/json](https:/github.com/Dalkak/JSON/): JSON 및 Object 관련 기능을 제공합니다.
