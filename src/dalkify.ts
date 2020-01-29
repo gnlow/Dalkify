@@ -28,11 +28,9 @@ export function inject(pack: Pack, Entry) {
             paramsKeyMap[paramName] = i
             i++;
         }
-        console.log(template.split(/[({<)}>]/))
         template.split(/[({<)}>]/).forEach((x, i) => {
             if (x) {
                 if (i % 2 == 0) {
-                    console.log(blockPointer)
                     blockPointer.params.push({
                         type: "function_field_label",
                         params: [
@@ -41,7 +39,6 @@ export function inject(pack: Pack, Entry) {
                     });
                     blockPointer = blockPointer.params[blockPointer.params.length - 1];
                 } else {
-                    console.log(blockPointer)
                     blockPointer.params.push({
                         type: "function_field_string",
                         params: [{

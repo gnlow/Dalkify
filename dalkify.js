@@ -22,11 +22,9 @@ var dalkify = (function (exports, dalkak) {
                 paramsKeyMap[paramName] = i;
                 i++;
             }
-            console.log(template.split(/[({<)}>]/));
             template.split(/[({<)}>]/).forEach(function (x, i) {
                 if (x) {
                     if (i % 2 == 0) {
-                        console.log(blockPointer);
                         blockPointer.params.push({
                             type: "function_field_label",
                             params: [
@@ -36,7 +34,6 @@ var dalkify = (function (exports, dalkak) {
                         blockPointer = blockPointer.params[blockPointer.params.length - 1];
                     }
                     else {
-                        console.log(blockPointer);
                         blockPointer.params.push({
                             type: "function_field_string",
                             params: [{
