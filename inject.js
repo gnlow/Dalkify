@@ -5,6 +5,8 @@ var load = url => new Promise((o, x) => {
     document.body.appendChild(sc);
 });
 
+const getPackageName = name => /(@[^@/]+\/[^@/]+)(?:@.*)?/.exec(name)[1];
+
 if ("Entry" in window && Entry.variableContainer) {
     (async () => {
         try {
@@ -13,7 +15,7 @@ if ("Entry" in window && Entry.variableContainer) {
             for (var packName of packList) {
                 dalkLog("loading: " + packName.data);
                 await load("https://unpkg.com/" + packName.data);
-                dalkify.inject(window[packName.data], Entry);
+                dalkify.inject(window[getPackageName(packName.data)], Entry);
                 dalkLog("injected: " + packName.data);
             }
             dalkLog("inject end");
