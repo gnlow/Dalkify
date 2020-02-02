@@ -17,7 +17,6 @@ var dalkify = (function (exports, dalkak) {
             var i = 0;
             for (var paramName in block.params.value) { //순서 보장 못함. 수정 필요
                 var param = block.params.value[paramName];
-                //console.log(param)
                 template = template.replace(dalkak.Template.addBracket(paramName, param.returnType), "(" + paramName + ")");
                 paramsKeyMap[paramName] = i;
                 i++;
@@ -44,9 +43,9 @@ var dalkify = (function (exports, dalkak) {
                     }
                 }
             });
-            if (!Entry.variableContainer.functions_["dalk_" + block.name.key]) {
+            if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
                 Entry.variableContainer.setFunctions([{
-                        id: "dalk_" + block.name.key,
+                        id: "dalk_" + block.name,
                         content: JSON.stringify([
                             [entBlock]
                         ])
@@ -60,21 +59,41 @@ var dalkify = (function (exports, dalkak) {
                     name: x
                 });
             }
+            function getProjectVariables(Entry) {
+                return Entry.variableContainer.getVariableJSON()
+                    .map(function (val) {
+                    var variable = new dalkak.Variable({
+                        name: val.name,
+                        value: val.value
+                    });
+                    Object.defineProperty(variable, "value", {
+                        get: function () {
+                            return Entry.variableContainer.getVariableByName(val.name).getValue();
+                        },
+                        set: function (data) {
+                            Entry.variableContainer.getVariableByName(val.name).setValue(data);
+                        },
+                    });
+                    return variable;
+                })
+                    .reduce((function (acc, now) {
+                    acc[now.name] = now;
+                    return acc;
+                }), {});
+            }
             var func = function (object, script) {
-                //script.block.params.forEach((x, i) => {if(params[i]){params[i].value = x.data.params[0]}});
                 var objParam = {};
                 params.forEach(function (x) {
                     objParam[x.name] = script.getValue(x.name, script);
                 });
-                return block.func(objParam, {
-                    platform: "Entry",
-                    data: {
-                        Entry: Entry
-                    }
+                return block.func(objParam, new dalkak.Project({
+                    variables: getProjectVariables(Entry)
+                }), {
+                    Entry: Entry
                 });
             };
-            Entry.block["func_dalk_" + block.name.key].func = func;
-            Entry.block["func_dalk_" + block.name.key].paramsKeyMap = paramsKeyMap;
+            Entry.block["func_dalk_" + block.name].func = func;
+            Entry.block["func_dalk_" + block.name].paramsKeyMap = paramsKeyMap;
         });
     }
 

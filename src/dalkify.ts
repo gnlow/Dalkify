@@ -2,7 +2,9 @@ import {
     Pack,
     Block,
     Template,
-    Type
+    Type,
+    Project,
+    Variable,
 } from "dalkak"
 
 export function inject(pack: Pack, Entry) {
@@ -23,7 +25,6 @@ export function inject(pack: Pack, Entry) {
         var i = 0;
         for (var paramName in block.params.value) { //순서 보장 못함. 수정 필요
             var param = block.params.value[paramName];
-            //console.log(param)
             template = template.replace(Template.addBracket(paramName, param.returnType), `(${paramName})`);
             paramsKeyMap[paramName] = i
             i++;
@@ -49,9 +50,9 @@ export function inject(pack: Pack, Entry) {
                 }
             }
         });
-        if (!Entry.variableContainer.functions_["dalk_" + block.name.key]) {
+        if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
             Entry.variableContainer.setFunctions([{
-                id: "dalk_" + block.name.key,
+                id: "dalk_" + block.name,
                 content: JSON.stringify([
                     [entBlock]
                 ])
@@ -69,21 +70,43 @@ export function inject(pack: Pack, Entry) {
                 name: x
             });
         }
+        function getProjectVariables(Entry){
+            return (Entry.variableContainer.getVariableJSON() as Array<any>)
+                .map(val => {
+                    var variable = new Variable({
+                    name: val.name, 
+                    value: val.value
+                    });
+                    Object.defineProperty(variable, "value", {
+                        get(){
+                            return Entry.variableContainer.getVariableByName(val.name).getValue();
+                        },
+                        set(data){
+                            Entry.variableContainer.getVariableByName(val.name).setValue(data);
+                        },
+                    });
+                    return variable;
+                })
+                .reduce( ((acc, now) => {
+                    acc[now.name] = now;
+                    return acc;
+                }), {} );
+        }
         var func = (object, script) => {
-            //script.block.params.forEach((x, i) => {if(params[i]){params[i].value = x.data.params[0]}});
             var objParam = {};
             params.forEach(x => {
                 objParam[x.name] = script.getValue(x.name, script);
             });
-            return block.func(objParam, {
-                platform: "Entry",
-                data: {
+            return block.func(objParam, 
+                new Project({
+                    variables: getProjectVariables(Entry)
+                }),
+                {
                     Entry
                 }
-            });
+            );
         }
-        Entry.block["func_dalk_" + block.name.key].func = func;
-        Entry.block["func_dalk_" + block.name.key].paramsKeyMap = paramsKeyMap;
+        Entry.block["func_dalk_" + block.name].func = func;
+        Entry.block["func_dalk_" + block.name].paramsKeyMap = paramsKeyMap;
     });
-
 }
