@@ -21,13 +21,17 @@ export function inject(pack: Pack, Entry) {
             params: []
         };
         var blockPointer = entBlock;
-        var template = block.template.template;
+        var template = block.template.content;
         var i = 0;
         for (var paramName in block.params.value) { //순서 보장 못함. 수정 필요
             var param = block.params.value[paramName];
             template = template.replace(Template.addBracket(paramName, param.returnType), `(${paramName})`);
-            paramsKeyMap[paramName] = i
+            paramsKeyMap[paramName] = i;
             i++;
+        }
+        if(block.returnType.name == "string"){
+            template += " →(RETURN)";
+            paramsKeyMap["RETURN"] = i;
         }
         template.split(/[({<)}>]/).forEach((x, i) => {
             if (x) {
@@ -50,14 +54,14 @@ export function inject(pack: Pack, Entry) {
                 }
             }
         });
-        if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
+        //if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
             Entry.variableContainer.setFunctions([{
                 id: "dalk_" + block.name,
                 content: JSON.stringify([
                     [entBlock]
                 ])
             }]);
-        }
+        //}
         var params: {
             value: any,
             type: Type,
@@ -92,20 +96,40 @@ export function inject(pack: Pack, Entry) {
                     return acc;
                 }), {} );
         }
-        var func = (object, script) => {
-            var objParam = {};
-            params.forEach(x => {
-                objParam[x.name] = script.getValue(x.name, script);
-            });
-            return block.func(objParam, 
-                new Project({
-                    variables: getProjectVariables(Entry)
-                }),
-                {
-                    Entry
-                }
-            );
+        if(block.returnType.name == "string"){
+            var func = (object, script) => {
+                var objParam = {};
+                params.forEach(x => {
+                    objParam[x.name] = script.getValue(x.name, script);
+                });
+                Entry.variableContainer.getVariableByName(script.getValue("RETURN", script)).setValue(block.func(objParam, 
+                    new Project({
+                        variables: getProjectVariables(Entry)
+                    }),
+                    {
+                        Entry
+                    }
+                ));
+                return;
+            }
+        }else{
+            var func = (object, script) => {
+                var objParam = {};
+                params.forEach(x => {
+                    objParam[x.name] = script.getValue(x.name, script);
+                });
+                block.func(objParam, 
+                    new Project({
+                        variables: getProjectVariables(Entry)
+                    }),
+                    {
+                        Entry
+                    }
+                );
+                return;
+            }
         }
+        
         Entry.block["func_dalk_" + block.name].func = func;
         Entry.block["func_dalk_" + block.name].paramsKeyMap = paramsKeyMap;
     });

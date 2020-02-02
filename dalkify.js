@@ -13,13 +13,17 @@ var dalkify = (function (exports, dalkak) {
                 params: []
             };
             var blockPointer = entBlock;
-            var template = block.template.template;
+            var template = block.template.content;
             var i = 0;
             for (var paramName in block.params.value) { //순서 보장 못함. 수정 필요
                 var param = block.params.value[paramName];
                 template = template.replace(dalkak.Template.addBracket(paramName, param.returnType), "(" + paramName + ")");
                 paramsKeyMap[paramName] = i;
                 i++;
+            }
+            if (block.returnType.name == "string") {
+                template += " →(RETURN)";
+                paramsKeyMap["RETURN"] = i;
             }
             template.split(/[({<)}>]/).forEach(function (x, i) {
                 if (x) {
@@ -43,14 +47,14 @@ var dalkify = (function (exports, dalkak) {
                     }
                 }
             });
-            if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
-                Entry.variableContainer.setFunctions([{
-                        id: "dalk_" + block.name,
-                        content: JSON.stringify([
-                            [entBlock]
-                        ])
-                    }]);
-            }
+            //if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
+            Entry.variableContainer.setFunctions([{
+                    id: "dalk_" + block.name,
+                    content: JSON.stringify([
+                        [entBlock]
+                    ])
+                }]);
+            //}
             var params = [];
             for (var x in block.params.value) {
                 params.push({
@@ -81,17 +85,34 @@ var dalkify = (function (exports, dalkak) {
                     return acc;
                 }), {});
             }
-            var func = function (object, script) {
-                var objParam = {};
-                params.forEach(function (x) {
-                    objParam[x.name] = script.getValue(x.name, script);
-                });
-                return block.func(objParam, new dalkak.Project({
-                    variables: getProjectVariables(Entry)
-                }), {
-                    Entry: Entry
-                });
-            };
+            if (block.returnType.name == "string") {
+                var func = function (object, script) {
+                    var objParam = {};
+                    params.forEach(function (x) {
+                        objParam[x.name] = script.getValue(x.name, script);
+                    });
+                    Entry.variableContainer.getVariableByName(script.getValue("RETURN", script)).setValue(block.func(objParam, new dalkak.Project({
+                        variables: getProjectVariables(Entry)
+                    }), {
+                        Entry: Entry
+                    }));
+                    return;
+                };
+            }
+            else {
+                var func = function (object, script) {
+                    var objParam = {};
+                    params.forEach(function (x) {
+                        objParam[x.name] = script.getValue(x.name, script);
+                    });
+                    block.func(objParam, new dalkak.Project({
+                        variables: getProjectVariables(Entry)
+                    }), {
+                        Entry: Entry
+                    });
+                    return;
+                };
+            }
             Entry.block["func_dalk_" + block.name].func = func;
             Entry.block["func_dalk_" + block.name].paramsKeyMap = paramsKeyMap;
         });
