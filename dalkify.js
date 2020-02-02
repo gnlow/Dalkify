@@ -64,18 +64,18 @@ var dalkify = (function (exports, dalkak) {
                 });
             }
             function getProjectVariables(Entry) {
-                return Entry.variableContainer.getVariableJSON()
+                return Entry.variableContainer.variables_
                     .map(function (val) {
                     var variable = new dalkak.Variable({
-                        name: val.name,
-                        value: val.value
+                        name: val.getName(),
+                        value: val.getValue()
                     });
                     Object.defineProperty(variable, "value", {
                         get: function () {
-                            return Entry.variableContainer.getVariableByName(val.name).getValue();
+                            return Entry.variableContainer.getVariableByName(val.getName()).getValue();
                         },
                         set: function (data) {
-                            Entry.variableContainer.getVariableByName(val.name).setValue(data);
+                            Entry.variableContainer.getVariableByName(val.getName()).setValue(data);
                         },
                     });
                     return variable;
@@ -91,7 +91,11 @@ var dalkify = (function (exports, dalkak) {
                     params.forEach(function (x) {
                         objParam[x.name] = script.getValue(x.name, script);
                     });
-                    Entry.variableContainer.getVariableByName(script.getValue("RETURN", script)).setValue(block.func(objParam, new dalkak.Project({
+                    var RETURN = script.getValue("RETURN", script);
+                    if (RETURN && !Entry.variableContainer.getVariableByName(RETURN)) {
+                        Entry.variableContainer.addVariable({ name: RETURN });
+                    }
+                    Entry.variableContainer.getVariableByName(RETURN).setValue(block.func(objParam, new dalkak.Project({
                         variables: getProjectVariables(Entry)
                     }), {
                         Entry: Entry

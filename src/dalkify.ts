@@ -75,18 +75,18 @@ export function inject(pack: Pack, Entry) {
             });
         }
         function getProjectVariables(Entry){
-            return (Entry.variableContainer.getVariableJSON() as Array<any>)
+            return (Entry.variableContainer.variables_ as Array<any>)
                 .map(val => {
                     var variable = new Variable({
-                    name: val.name, 
-                    value: val.value
+                    name: val.getName(), 
+                    value: val.getValue()
                     });
                     Object.defineProperty(variable, "value", {
                         get(){
-                            return Entry.variableContainer.getVariableByName(val.name).getValue();
+                            return Entry.variableContainer.getVariableByName(val.getName()).getValue();
                         },
                         set(data){
-                            Entry.variableContainer.getVariableByName(val.name).setValue(data);
+                            Entry.variableContainer.getVariableByName(val.getName()).setValue(data);
                         },
                     });
                     return variable;
@@ -98,11 +98,15 @@ export function inject(pack: Pack, Entry) {
         }
         if(block.returnType.name == "string"){
             var func = (object, script) => {
-                var objParam = {};
+                var objParam: any = {};
                 params.forEach(x => {
                     objParam[x.name] = script.getValue(x.name, script);
                 });
-                Entry.variableContainer.getVariableByName(script.getValue("RETURN", script)).setValue(block.func(objParam, 
+                var RETURN = script.getValue("RETURN", script);
+                if(RETURN && !Entry.variableContainer.getVariableByName(RETURN)){
+                    Entry.variableContainer.addVariable({name: RETURN})
+                }
+                Entry.variableContainer.getVariableByName(RETURN).setValue(block.func(objParam, 
                     new Project({
                         variables: getProjectVariables(Entry)
                     }),
@@ -114,7 +118,7 @@ export function inject(pack: Pack, Entry) {
             }
         }else{
             var func = (object, script) => {
-                var objParam = {};
+                var objParam: any = {};
                 params.forEach(x => {
                     objParam[x.name] = script.getValue(x.name, script);
                 });
