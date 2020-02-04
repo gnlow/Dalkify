@@ -1,4 +1,8 @@
-# Dalkify
+<p align="center">
+  <img src="https://raw.githubusercontent.com/gnlow/Dalkify/master/icon.png" width="100"></img>
+</p>
+<h1 align="center">Dalkify</h1>
+
 [Dalkak](https://github.com/gnlow/Dalkak/) 기반의 블록 패키지를 다른 플랫폼에서 사용 가능하게 해주는 크롬 확장 프로그램입니다.  
 현재는 엔트리 플랫폼만 지원하고 있습니다.
 엔트리 [만들기](https://playentry.org/ws)와 작품 페이지 접속 시 자동으로 실행됩니다.
