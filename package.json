@@ -1,6 +1,6 @@
 {
   "name": "dalkify",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "source": "src/dalkify.ts",
   "main": "dist/dalkify.js",
