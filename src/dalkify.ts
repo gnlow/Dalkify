@@ -5,6 +5,9 @@ import {
     Type,
     Project,
     Variable,
+    Dict,
+    Param,
+    Literal,
 } from "dalkak"
 
 export function inject(pack: Pack, Entry) {
@@ -97,16 +100,18 @@ export function inject(pack: Pack, Entry) {
                 }), {} );
         }
         if(block.returnType.name == "string"){
-            var func = (object, script) => {
-                var objParam: any = {};
+            var func = async (object, script) => {
+                var objParam: Dict<Param> = {value: {}};
                 params.forEach(x => {
-                    objParam[x.name] = script.getValue(x.name, script);
+                    var paramValue = script.getValue(x.name, script);
+                    objParam.value[x.name] = Literal.from(paramValue).setParam("input", paramValue);
                 });
                 var RETURN = script.getValue("RETURN", script);
                 if(RETURN && !Entry.variableContainer.getVariableByName(RETURN)){
                     Entry.variableContainer.addVariable({name: RETURN})
                 }
-                Entry.variableContainer.getVariableByName(RETURN).setValue(block.func(objParam, 
+                block.setParams(objParam);
+                Entry.variableContainer.getVariableByName(RETURN).setValue(await block.run( 
                     new Project({
                         variables: getProjectVariables(Entry)
                     }),
@@ -117,7 +122,7 @@ export function inject(pack: Pack, Entry) {
                 return;
             }
         }else{
-            var func = (object, script) => {
+            var func = async (object, script) => {
                 var objParam: any = {};
                 params.forEach(x => {
                     objParam[x.name] = script.getValue(x.name, script);
