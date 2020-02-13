@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/gnlow/Dalkify/master/icon.png" width="100"></img>
+  <img src="https://raw.githubusercontent.com/gnlow/id/master/Dalkak/dalkify/dalkify.svg?sanitize=true" width="100"></img>
 </p>
 <h1 align="center">Dalkify</h1>
 
