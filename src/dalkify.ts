@@ -1,5 +1,5 @@
 import {
-    Pack,
+    Extension,
     Block,
     Template,
     Type,
@@ -10,7 +10,14 @@ import {
     Literal,
 } from "dalkak"
 
-export function inject(pack: Pack, Entry) {
+export function inject(pack: Extension, Entry) {
+    if(pack.on?.run){
+        Entry.addEventListener("run", pack.on.run);
+    }
+    if(pack.on?.stop){
+        Entry.addEventListener("stop", pack.on.stop);
+    }
+
     let blocks: Array < Block > = [];
     for (var block in pack.blocks.value) {
         blocks.push(pack.blocks.value[block]);
@@ -142,4 +149,8 @@ export function inject(pack: Pack, Entry) {
         Entry.block["func_dalk_" + block.name].func = func;
         Entry.block["func_dalk_" + block.name].paramsKeyMap = paramsKeyMap;
     });
+
+    if(pack.on?.mount){
+        pack.on.mount();
+    }
 }

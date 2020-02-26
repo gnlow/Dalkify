@@ -55,6 +55,13 @@ var dalkify = (function (exports, dalkak) {
 
     function inject(pack, Entry) {
         var _this = this;
+        var _a, _b, _c;
+        if ((_a = pack.on) === null || _a === void 0 ? void 0 : _a.run) {
+            Entry.addEventListener("run", pack.on.run);
+        }
+        if ((_b = pack.on) === null || _b === void 0 ? void 0 : _b.stop) {
+            Entry.addEventListener("stop", pack.on.stop);
+        }
         var blocks = [];
         for (var block in pack.blocks.value) {
             blocks.push(pack.blocks.value[block]);
@@ -187,6 +194,9 @@ var dalkify = (function (exports, dalkak) {
             Entry.block["func_dalk_" + block.name].func = func;
             Entry.block["func_dalk_" + block.name].paramsKeyMap = paramsKeyMap;
         });
+        if ((_c = pack.on) === null || _c === void 0 ? void 0 : _c.mount) {
+            pack.on.mount();
+        }
     }
 
     exports.inject = inject;
