@@ -108,7 +108,7 @@ export function inject(pack: Extension, Entry) {
         }
         if(block.returnType.name == "string"){
             var func = async (object, script) => {
-                var objParam: Dict<Param> = {value: {}};
+                var objParam: Dict<Param> = new Dict({});
                 params.forEach(x => {
                     var paramValue = script.getValue(x.name, script);
                     objParam.value[x.name] = Literal.from(paramValue).setParam("input", paramValue);

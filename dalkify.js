@@ -151,7 +151,7 @@ var dalkify = (function (exports, dalkak) {
                     return __generator(this, function (_c) {
                         switch (_c.label) {
                             case 0:
-                                objParam = { value: {} };
+                                objParam = new dalkak.Dict({});
                                 params.forEach(function (x) {
                                     var paramValue = script.getValue(x.name, script);
                                     objParam.value[x.name] = dalkak.Literal.from(paramValue).setParam("input", paramValue);
