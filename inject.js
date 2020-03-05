@@ -11,7 +11,7 @@ if ("Entry" in window && Entry.variableContainer) {
     (async () => {
         try {
             dalkLog("inject start");
-            var packList = Entry.variableContainer.getListByName("dalk_pack").getArray()
+            var packList = Entry.variableContainer.getListByName("dalkak_pack").getArray()
             for (var packName of packList) {
                 dalkLog("loading: " + packName.data);
                 await load("https://unpkg.com/" + packName.data);

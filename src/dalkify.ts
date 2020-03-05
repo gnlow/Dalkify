@@ -64,9 +64,9 @@ export function inject(pack: Extension, Entry) {
                 }
             }
         });
-        //if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
+        //if (!Entry.variableContainer.functions_["dalkak_" + block.name]) {
             Entry.variableContainer.setFunctions([{
-                id: "dalk_" + block.name,
+                id: "dalkak_" + block.name,
                 content: JSON.stringify([
                     [entBlock]
                 ])
@@ -146,11 +146,11 @@ export function inject(pack: Extension, Entry) {
             }
         }
         
-        Entry.block["func_dalk_" + block.name].func = func;
-        Entry.block["func_dalk_" + block.name].paramsKeyMap = paramsKeyMap;
+        Entry.block["func_dalkak_" + block.name].func = func;
+        Entry.block["func_dalkak_" + block.name].paramsKeyMap = paramsKeyMap;
         if(pack.color){
-            Entry.block["func_dalk_" + block.name].color = "#" + pack.color.toString(16);
-            Entry.block["func_dalk_" + block.name].outerLine = "#00000000";
+            Entry.block["func_dalkak_" + block.name].color = "#" + pack.color.toString(16);
+            Entry.block["func_dalkak_" + block.name].outerLine = "#00000000";
         }
     });
 
