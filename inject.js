@@ -11,11 +11,11 @@ if ("Entry" in window && Entry.variableContainer) {
     (async () => {
         try {
             dalkLog("inject start");
-            var packList = Entry.variableContainer.getListByName("dalkak_pack").getArray()
+            var packList = Entry.variableContainer.getListByName("dalk_pack").getArray()
             for (var packName of packList) {
                 dalkLog("loading: " + packName.data);
                 await load("https://unpkg.com/" + packName.data);
-                dalkify.inject(window[getPackageName(packName.data)], Entry);
+                dalkify.inject(window[getPackageName(packName.data)], Entry, getPackageName(packName.data));
                 dalkLog("injected: " + packName.data);
             }
             dalkLog("inject end");

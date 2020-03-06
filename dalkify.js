@@ -53,7 +53,7 @@ var dalkify = (function (exports, dalkak) {
         }
     }
 
-    function inject(pack, Entry) {
+    function inject(pack, Entry, packID) {
         var _this = this;
         var _a, _b, _c;
         if ((_a = pack.on) === null || _a === void 0 ? void 0 : _a.run) {
@@ -107,9 +107,9 @@ var dalkify = (function (exports, dalkak) {
                     }
                 }
             });
-            //if (!Entry.variableContainer.functions_["dalkak_" + block.name]) {
+            //if (!Entry.variableContainer.functions_["dalk_" + block.name]) {
             Entry.variableContainer.setFunctions([{
-                    id: "dalkak_" + block.name,
+                    id: "dalk_" + packID + "_" + block.name,
                     content: JSON.stringify([
                         [entBlock]
                     ])
@@ -191,11 +191,11 @@ var dalkify = (function (exports, dalkak) {
                     });
                 }); };
             }
-            Entry.block["func_dalkak_" + block.name].func = func;
-            Entry.block["func_dalkak_" + block.name].paramsKeyMap = paramsKeyMap;
+            Entry.block["func_dalk_" + packID + "_" + block.name].func = func;
+            Entry.block["func_dalk_" + packID + "_" + block.name].paramsKeyMap = paramsKeyMap;
             if (pack.color) {
-                Entry.block["func_dalkak_" + block.name].color = "#" + pack.color.toString(16);
-                Entry.block["func_dalkak_" + block.name].outerLine = "#00000000";
+                Entry.block["func_dalk_" + packID + "_" + block.name].color = "#" + pack.color.toString(16);
+                Entry.block["func_dalk_" + packID + "_" + block.name].outerLine = "#00000000";
             }
         });
         if ((_c = pack.on) === null || _c === void 0 ? void 0 : _c.mount) {
