@@ -106,46 +106,30 @@ export function inject(pack: Extension, Entry, packID) {
                     return acc;
                 }), {} );
         }
-        if(block.returnType.name == "string"){
-            var func = async (object, script) => {
-                var objParam: Dict<Param> = new Dict({});
-                params.forEach(x => {
-                    var paramValue = script.getValue(x.name, script);
-                    objParam.value[x.name] = Literal.from(paramValue);
-                });
-                var RETURN = script.getValue("RETURN", script);
-                if(RETURN && !Entry.variableContainer.getVariableByName(RETURN)){
-                    Entry.variableContainer.addVariable({name: RETURN})
+        var func = async (object, script) => {
+            var objParam: Dict<Param> = new Dict({});
+            params.forEach(x => {
+                var paramValue = script.getValue(x.name, script);
+                objParam.value[x.name] = Literal.from(paramValue);
+            });
+            var RETURN = script.getValue("RETURN", script);
+            if(RETURN && !Entry.variableContainer.getVariableByName(RETURN)){
+                Entry.variableContainer.addVariable({name: RETURN})
+            }
+            block.setParams(objParam);
+            let result = await block.run( 
+                new Project({
+                    variables: getProjectVariables(Entry)
+                }),
+                {
+                    Entry
                 }
-                block.setParams(objParam);
-                Entry.variableContainer.getVariableByName(RETURN).setValue(await block.run( 
-                    new Project({
-                        variables: getProjectVariables(Entry)
-                    }),
-                    {
-                        Entry
-                    }
-                ));
-                return;
+            );
+            if(block.returnType.name == "string"){
+                Entry.variableContainer.getVariableByName(RETURN).setValue(result);
             }
-        }else{
-            var func = async (object, script) => {
-                var objParam: any = {};
-                params.forEach(x => {
-                    objParam[x.name] = script.getValue(x.name, script);
-                });
-                block.func(objParam, 
-                    new Project({
-                        variables: getProjectVariables(Entry)
-                    }),
-                    {
-                        Entry
-                    }
-                );
-                return;
-            }
+            return;
         }
-        
         Entry.block[`func_dalk__${packID}__${block.name}`].func = func;
         Entry.block[`func_dalk__${packID}__${block.name}`].paramsKeyMap = paramsKeyMap;
         if(pack.color){
