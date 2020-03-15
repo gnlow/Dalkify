@@ -145,52 +145,35 @@ var dalkify = (function (exports, dalkak) {
                     return acc;
                 }), {});
             }
-            if (block.returnType.name == "string") {
-                var func = function (object, script) { return __awaiter(_this, void 0, void 0, function () {
-                    var objParam, RETURN, _a, _b;
-                    return __generator(this, function (_c) {
-                        switch (_c.label) {
-                            case 0:
-                                objParam = new dalkak.Dict({});
-                                params.forEach(function (x) {
-                                    var paramValue = script.getValue(x.name, script);
-                                    objParam.value[x.name] = dalkak.Literal.from(paramValue).setParam("input", paramValue);
-                                });
-                                RETURN = script.getValue("RETURN", script);
-                                if (RETURN && !Entry.variableContainer.getVariableByName(RETURN)) {
-                                    Entry.variableContainer.addVariable({ name: RETURN });
-                                }
-                                block.setParams(objParam);
-                                _b = (_a = Entry.variableContainer.getVariableByName(RETURN)).setValue;
-                                return [4 /*yield*/, block.run(new dalkak.Project({
-                                        variables: getProjectVariables(Entry)
-                                    }), {
-                                        Entry: Entry
-                                    })];
-                            case 1:
-                                _b.apply(_a, [_c.sent()]);
-                                return [2 /*return*/];
-                        }
-                    });
-                }); };
-            }
-            else {
-                var func = function (object, script) { return __awaiter(_this, void 0, void 0, function () {
-                    var objParam;
-                    return __generator(this, function (_a) {
-                        objParam = {};
-                        params.forEach(function (x) {
-                            objParam[x.name] = script.getValue(x.name, script);
-                        });
-                        block.func(objParam, new dalkak.Project({
-                            variables: getProjectVariables(Entry)
-                        }), {
-                            Entry: Entry
-                        });
-                        return [2 /*return*/];
-                    });
-                }); };
-            }
+            var func = function (object, script) { return __awaiter(_this, void 0, void 0, function () {
+                var objParam, RETURN, result;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            objParam = new dalkak.Dict({});
+                            params.forEach(function (x) {
+                                var paramValue = script.getValue(x.name, script);
+                                objParam.value[x.name] = dalkak.Literal.from(paramValue);
+                            });
+                            RETURN = script.getValue("RETURN", script);
+                            if (RETURN && !Entry.variableContainer.getVariableByName(RETURN)) {
+                                Entry.variableContainer.addVariable({ name: RETURN });
+                            }
+                            block.setParams(objParam);
+                            return [4 /*yield*/, block.run(new dalkak.Project({
+                                    variables: getProjectVariables(Entry)
+                                }), {
+                                    Entry: Entry
+                                })];
+                        case 1:
+                            result = _a.sent();
+                            if (block.returnType.name == "string") {
+                                Entry.variableContainer.getVariableByName(RETURN).setValue(result);
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            }); };
             Entry.block["func_dalk__" + packID + "__" + block.name].func = func;
             Entry.block["func_dalk__" + packID + "__" + block.name].paramsKeyMap = paramsKeyMap;
             if (pack.color) {
