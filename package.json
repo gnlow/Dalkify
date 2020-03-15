@@ -30,6 +30,6 @@
     "typescript": "^3.7.4"
   },
   "dependencies": {
-    "dalkak": "^0.8.14"
+    "dalkak": "^0.8.15"
   }
 }

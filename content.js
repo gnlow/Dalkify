@@ -1,20 +1,17 @@
+const load = path => new Promise((o, x) => {
+    injectScript(path, "body")
+    .addEventListener("load", o);
+});
+
 log("waiting for window")
 window.addEventListener("load",
-    () => {
-        log("window loaded")
-        injectScript(chrome.extension.getURL("node_modules/dalkak/dist/dalkak.umd.js"), "body").addEventListener("load",
-            () => {
-                log("dalkak loaded")
-                injectScript(chrome.extension.getURL("dalkify.js"), "body").addEventListener("load",
-                    () => {
-                        log("package loaded")
-                        injectScript(chrome.extension.getURL("inject.js"), "body").addEventListener("load", () => {
-
-                        })
-                    }
-                )
-            }
-        )
+    async () => {
+        log("window loaded");
+        await load("node_modules/dalkak/dist/dalkak.umd.js");
+        log("dalkak loaded");
+        await load("dalkify.js");
+        log("package loaded");
+        await load("inject.js");
     }
 
 );
