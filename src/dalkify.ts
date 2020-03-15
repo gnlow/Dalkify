@@ -8,6 +8,7 @@ import {
     Dict,
     Param,
     Literal,
+    Event,
 } from "dalkak"
 
 export function inject(pack: Extension, Entry, packID) {
@@ -106,11 +107,30 @@ export function inject(pack: Extension, Entry, packID) {
                     return acc;
                 }), {} );
         }
+        function getProjectMessages(Entry){
+            return (Entry.variableContainer.messages_ as Array<any>)
+                .map(val => {
+                    var message = new Event(val.name);
+                    message.fire = () => {
+                        Entry.engine.raiseMessage(val.id);
+                        return message;
+                    }
+                    return message;
+                })
+                .reduce( ((acc, now) => {
+                    acc[now.name] = now;
+                    return acc;
+                }), {} );
+        }
+        let project = new Project({
+            variables: getProjectVariables(Entry),
+            events: getProjectMessages(Entry),
+        });
         var func = async (object, script) => {
             var objParam: Dict<Param> = new Dict({});
             params.forEach(x => {
                 var paramValue = script.getValue(x.name, script);
-                objParam.value[x.name] = Literal.from(paramValue);
+                objParam.value[x.name] = Literal.from(x.type.fromString(paramValue, project));
             });
             var RETURN = script.getValue("RETURN", script);
             if(RETURN && !Entry.variableContainer.getVariableByName(RETURN)){
@@ -118,9 +138,7 @@ export function inject(pack: Extension, Entry, packID) {
             }
             block.setParams(objParam);
             let result = await block.run( 
-                new Project({
-                    variables: getProjectVariables(Entry)
-                }),
+                project,
                 {
                     Entry
                 }

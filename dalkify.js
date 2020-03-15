@@ -145,6 +145,25 @@ var dalkify = (function (exports, dalkak) {
                     return acc;
                 }), {});
             }
+            function getProjectMessages(Entry) {
+                return Entry.variableContainer.messages_
+                    .map(function (val) {
+                    var message = new dalkak.Event(val.name);
+                    message.fire = function () {
+                        Entry.engine.raiseMessage(val.id);
+                        return message;
+                    };
+                    return message;
+                })
+                    .reduce((function (acc, now) {
+                    acc[now.name] = now;
+                    return acc;
+                }), {});
+            }
+            var project = new dalkak.Project({
+                variables: getProjectVariables(Entry),
+                events: getProjectMessages(Entry),
+            });
             var func = function (object, script) { return __awaiter(_this, void 0, void 0, function () {
                 var objParam, RETURN, result;
                 return __generator(this, function (_a) {
@@ -153,16 +172,14 @@ var dalkify = (function (exports, dalkak) {
                             objParam = new dalkak.Dict({});
                             params.forEach(function (x) {
                                 var paramValue = script.getValue(x.name, script);
-                                objParam.value[x.name] = dalkak.Literal.from(paramValue);
+                                objParam.value[x.name] = dalkak.Literal.from(x.type.fromString(paramValue, project));
                             });
                             RETURN = script.getValue("RETURN", script);
                             if (RETURN && !Entry.variableContainer.getVariableByName(RETURN)) {
                                 Entry.variableContainer.addVariable({ name: RETURN });
                             }
                             block.setParams(objParam);
-                            return [4 /*yield*/, block.run(new dalkak.Project({
-                                    variables: getProjectVariables(Entry)
-                                }), {
+                            return [4 /*yield*/, block.run(project, {
                                     Entry: Entry
                                 })];
                         case 1:
