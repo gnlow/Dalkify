@@ -172,7 +172,7 @@ var dalkify = (function (exports, dalkak) {
                             objParam = new dalkak.Dict({});
                             params.forEach(function (x) {
                                 var paramValue = script.getValue(x.name, script);
-                                objParam.value[x.name] = dalkak.Literal.from(x.type.fromString(paramValue, project));
+                                objParam.value[x.name] = dalkak.Literal.from(x.type.fromString(paramValue, project) || paramValue);
                             });
                             RETURN = script.getValue("RETURN", script);
                             if (RETURN && !Entry.variableContainer.getVariableByName(RETURN)) {
