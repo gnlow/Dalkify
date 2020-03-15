@@ -111,7 +111,7 @@ export function inject(pack: Extension, Entry, packID) {
                 var objParam: Dict<Param> = new Dict({});
                 params.forEach(x => {
                     var paramValue = script.getValue(x.name, script);
-                    objParam.value[x.name] = Literal.from(paramValue).setParam("input", paramValue);
+                    objParam.value[x.name] = Literal.from(paramValue);
                 });
                 var RETURN = script.getValue("RETURN", script);
                 if(RETURN && !Entry.variableContainer.getVariableByName(RETURN)){
