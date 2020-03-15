@@ -21,7 +21,9 @@ export function inject(pack: Extension, Entry, packID) {
 
     let blocks: Array < Block > = [];
     for (var block in pack.blocks.value) {
-        blocks.push(pack.blocks.value[block]);
+        let blockClone = Block.fromBlock(pack.blocks.value[block]);
+        blockClone.name = pack.blocks.value[block].name;
+        blocks.push(blockClone);
     }
     blocks.forEach(block => {
         var paramsKeyMap: {

@@ -17,6 +17,10 @@
       "all_frames": true
     }
   ],
-  "web_accessible_resources": ["node_modules/dalkak/dist/dalkak.umd.js", "dalkify.js", "inject.js"],
+  "web_accessible_resources": [
+    "node_modules/dalkak/dist/dalkak.umd.js", 
+    "node_modules/@dalkak/basic/dist/index.umd.js",
+    "dalkify.js", 
+    "inject.js"],
   "content_security_policy": "script-src 'self' https://unpkg.com; object-src 'self'"
 }

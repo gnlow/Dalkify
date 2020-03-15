@@ -9,8 +9,10 @@ window.addEventListener("load",
         log("⌛ window loaded");
         await load("node_modules/dalkak/dist/dalkak.umd.js");
         log("⌛ dalkak loaded");
+        await load("node_modules/@dalkak/basic/dist/index.umd.js");
+        log("⌛ type data loaded");
         await load("dalkify.js");
-        log("⌛ package loaded");
+        log("⌛ dalkify loaded");
         await load("inject.js");
     }
 

@@ -64,7 +64,9 @@ var dalkify = (function (exports, dalkak) {
         }
         var blocks = [];
         for (var block in pack.blocks.value) {
-            blocks.push(pack.blocks.value[block]);
+            var blockClone = dalkak.Block.fromBlock(pack.blocks.value[block]);
+            blockClone.name = pack.blocks.value[block].name;
+            blocks.push(blockClone);
         }
         blocks.forEach(function (block) {
             var paramsKeyMap = {};
