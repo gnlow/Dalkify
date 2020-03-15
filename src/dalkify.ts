@@ -129,8 +129,20 @@ export function inject(pack: Extension, Entry, packID) {
         var func = async (object, script) => {
             var objParam: Dict<Param> = new Dict({});
             params.forEach(x => {
-                var paramValue = script.getValue(x.name, script);
-                objParam.value[x.name] = Literal.from(x.type.fromString(paramValue, project) || paramValue);
+                var paramValue: string | object = script.getValue(x.name, script);
+                console.log(x)
+                if(
+                    x.type.extend == Variable
+                    || x.type.extend == Event
+                ){
+                    // 엔트리에서는 변수와 신호를 파라미터로 보낼 수 없으므로
+                    // Type.fromString을 통해 id: string 값으로 데이터를 찾는다.
+                    objParam.value[x.name] = Literal.from(x.type.fromString(paramValue as string, project));
+                }else{
+                    // 변수나 신호가 아니면 그냥 보냄
+                    objParam.value[x.name] = Literal.from(paramValue);
+                }
+                
             });
             var RETURN = script.getValue("RETURN", script);
             if(RETURN && !Entry.variableContainer.getVariableByName(RETURN)){

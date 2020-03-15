@@ -10,16 +10,18 @@ const getPackageName = name => /(@[^@/]+\/[^@/]+)(?:@.*)?/.exec(name)[1];
 if ("Entry" in window && Entry.variableContainer) {
     (async () => {
         try {
-            dalkLog("inject start");
+            dalkLog("🏁 inject start");
             var packList = Entry.variableContainer.getListByName("dalk_pack").getArray()
+            let i = 0;
             for (var packName of packList) {
-                dalkLog("loading: " + packName.data);
+                i++;
+                dalkLog("⌛ loading: " + packName.data);
                 await load("https://unpkg.com/" + packName.data);
                 dalkify.inject(window[getPackageName(packName.data)], Entry, getPackageName(packName.data));
-                dalkLog("injected: " + packName.data);
+                dalkLog(`✔️(${i}/${packList.length}) injected: ${packName.data}`);
             }
-            dalkLog("inject end");
-            dalkLog(`${packList.length} package${packList.length > 1?"s":""} injected`);
+            dalkLog("✔️ inject end");
+            dalkLog(`✔️ ${packList.length} package${packList.length > 1?"s":""} injected`);
         } catch (e) {
             dalkErr(e);
             dalkErr("inject failed");
