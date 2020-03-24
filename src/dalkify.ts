@@ -9,6 +9,7 @@ import {
     Param,
     Literal,
     Event,
+    Local,
 } from "dalkak"
 
 export function inject(pack: Extension, Entry, packID) {
@@ -80,9 +81,13 @@ export function inject(pack: Extension, Entry, packID) {
             type: Type,
             name: string
         } [] = [];
+        let project = new Project({
+            variables: getProjectVariables(Entry),
+            events: getProjectMessages(Entry),
+        });
         for (var x in block.params.value) {
             params.push({
-                value: block.params.value[x].run(),
+                value: block.params.value[x].run(project),
                 type: block.paramTypes.value[x],
                 name: x
             });
@@ -124,10 +129,6 @@ export function inject(pack: Extension, Entry, packID) {
                     return acc;
                 }), {} );
         }
-        let project = new Project({
-            variables: getProjectVariables(Entry),
-            events: getProjectMessages(Entry),
-        });
         var func = async (object, script) => {
             var objParam: Dict<Param> = new Dict({});
             params.forEach(x => {
@@ -139,7 +140,7 @@ export function inject(pack: Extension, Entry, packID) {
                 ){
                     // 엔트리에서는 변수와 신호를 파라미터로 보낼 수 없으므로
                     // Type.fromString을 통해 id: string 값으로 데이터를 찾는다.
-                    objParam.value[x.name] = Literal.from(x.type.fromString(paramValue as string, project));
+                    objParam.value[x.name] = Literal.from(x.type.fromString(paramValue as string, project, new Local));
                 }else{
                     // 변수나 신호가 아니면 그냥 보냄
                     objParam.value[x.name] = Literal.from(paramValue);
@@ -152,10 +153,7 @@ export function inject(pack: Extension, Entry, packID) {
             }
             block.setParams(objParam);
             let result = await block.run( 
-                project,
-                {
-                    Entry
-                }
+                project
             );
             if(block.returnType.name == "string"){
                 Entry.variableContainer.getVariableByName(RETURN).setValue(result);

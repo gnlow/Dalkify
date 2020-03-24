@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "@dalkak/basic": "^0.1.2",
-    "dalkak": "^0.8.15"
+    "dalkak": "^0.9.1-next.8"
   }
 }
