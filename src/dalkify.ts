@@ -43,7 +43,7 @@ export function inject(pack: Extension, Entry, packID) {
             paramsKeyMap[paramName] = i;
             i++;
         }
-        if(block.returnType.name == "string"){
+        if(block.returnType.extend != Block){
             template += " →(RETURN)";
             paramsKeyMap["RETURN"] = i;
         }
@@ -155,7 +155,7 @@ export function inject(pack: Extension, Entry, packID) {
             let result = await block.run( 
                 project
             );
-            if(block.returnType.name == "string"){
+            if(block.returnType.extend != Block){
                 Entry.variableContainer.getVariableByName(RETURN).setValue(result);
             }
             return;
