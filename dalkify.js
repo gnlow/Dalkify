@@ -83,7 +83,7 @@ var dalkify = (function (exports, dalkak) {
                 paramsKeyMap[paramName] = i;
                 i++;
             }
-            if (block.returnType.name == "string") {
+            if (block.returnType.extend != dalkak.Block) {
                 template += " →(RETURN)";
                 paramsKeyMap["RETURN"] = i;
             }
@@ -118,9 +118,13 @@ var dalkify = (function (exports, dalkak) {
                 }]);
             //}
             var params = [];
+            var project = new dalkak.Project({
+                variables: getProjectVariables(Entry),
+                events: getProjectMessages(Entry),
+            });
             for (var x in block.params.value) {
                 params.push({
-                    value: block.params.value[x].run(),
+                    value: block.params.value[x].run(project),
                     type: block.paramTypes.value[x],
                     name: x
                 });
@@ -162,10 +166,6 @@ var dalkify = (function (exports, dalkak) {
                     return acc;
                 }), {});
             }
-            var project = new dalkak.Project({
-                variables: getProjectVariables(Entry),
-                events: getProjectMessages(Entry),
-            });
             var func = function (object, script) { return __awaiter(_this, void 0, void 0, function () {
                 var objParam, RETURN, result;
                 return __generator(this, function (_a) {
@@ -174,12 +174,11 @@ var dalkify = (function (exports, dalkak) {
                             objParam = new dalkak.Dict({});
                             params.forEach(function (x) {
                                 var paramValue = script.getValue(x.name, script);
-                                console.log(x);
                                 if (x.type.extend == dalkak.Variable
                                     || x.type.extend == dalkak.Event) {
                                     // 엔트리에서는 변수와 신호를 파라미터로 보낼 수 없으므로
                                     // Type.fromString을 통해 id: string 값으로 데이터를 찾는다.
-                                    objParam.value[x.name] = dalkak.Literal.from(x.type.fromString(paramValue, project));
+                                    objParam.value[x.name] = dalkak.Literal.from(x.type.fromString(paramValue, project, new dalkak.Local));
                                 }
                                 else {
                                     // 변수나 신호가 아니면 그냥 보냄
@@ -191,12 +190,10 @@ var dalkify = (function (exports, dalkak) {
                                 Entry.variableContainer.addVariable({ name: RETURN });
                             }
                             block.setParams(objParam);
-                            return [4 /*yield*/, block.run(project, {
-                                    Entry: Entry
-                                })];
+                            return [4 /*yield*/, block.run(project)];
                         case 1:
                             result = _a.sent();
-                            if (block.returnType.name == "string") {
+                            if (block.returnType.extend != dalkak.Block) {
                                 Entry.variableContainer.getVariableByName(RETURN).setValue(result);
                             }
                             return [2 /*return*/];

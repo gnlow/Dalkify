@@ -133,7 +133,6 @@ export function inject(pack: Extension, Entry, packID) {
             var objParam: Dict<Param> = new Dict({});
             params.forEach(x => {
                 var paramValue: string | object = script.getValue(x.name, script);
-                console.log(x)
                 if(
                     x.type.extend == Variable
                     || x.type.extend == Event
