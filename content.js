@@ -29,4 +29,5 @@ function injectScript(file_path, tag) {
 
 function log(text) {
     console.log(`%c Dalkify %c ${text} `, "background: #F56EC1; color: #FFF", "background: #FFCCDB; color: #000");
+    chrome.runtime.sendMessage({text}, () => console.log("OK"));
 }
