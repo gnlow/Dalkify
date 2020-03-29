@@ -12,20 +12,32 @@
                 width: 300px;
                 height: 500px;
                 margin: 0;
+            }
+            flexbox {
+                width: 300px;
+                height: 500px;
                 display: flex;
                 justify-content: center;
                 flex-direction: column;
+                overflow: hidden;
             }
             header {
                 text-align: center;
                 height: 500px;
                 line-height: 500px;
             }
-            .reel {
+            header.reel {
                 animation: 1s reel both;
             }
             logo {
                 font-size: 50px;
+            }
+            load-info {
+                position: fixed;
+                top: 400px;
+                left: 10px;
+                font-size: 14px;
+                z-index: -1;
             }
             div {
                 background-color: white;
@@ -47,12 +59,20 @@
         </style>
     </head>
     <body>
-        <header>
-            <logo>Dalkify</logo>
-        </header>
-        <div>
+        <flexbox>
+            <header>
+                <logo>Dalkify</logo>
+            </header>
+            <div>
+                <ul>
+                    <li>
 
-        </div>
+                    </li>
+                </ul>
+            </div>
+        </flexbox>
+        
+        <load-info>Loading...</load-info>
         <script src="popup.js"></script>
     </body>
 </html>
