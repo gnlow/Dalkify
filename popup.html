@@ -23,8 +23,8 @@
             }
             header {
                 text-align: center;
-                height: 500px;
-                line-height: 500px;
+                height: 80px;
+                line-height: 80px;
             }
             header.reel {
                 animation: 1s reel both;
@@ -45,6 +45,9 @@
                 height: 420px;
                 border-radius: 20px 20px 0 0;
                 box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+            ul {
+                list-style: none;
             }
             @keyframes reel {
                 from {
@@ -73,6 +76,7 @@
         </flexbox>
         
         <load-info>Loading...</load-info>
+        <script src="https://unpkg.com/redom"></script>
         <script src="popup.js"></script>
     </body>
 </html>
