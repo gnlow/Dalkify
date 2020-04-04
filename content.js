@@ -32,8 +32,24 @@ function log(text) {
     chrome.runtime.sendMessage({type: "log", data: text});
 }
 
+let packList;
+
 window.addEventListener("message", e => {
     if(e.data.dalkify){
         chrome.runtime.sendMessage(e.data);
+        switch(e.data.type){
+            case "new":
+                packList = [];
+                break;
+            case "pack":
+                console.log(e.data)
+                packList.push(e.data.data);
+                break;
+        }
     }
 })
+
+
+chrome.runtime.onMessage.addListener((req, sender, res) => {
+    res(packList);
+});
