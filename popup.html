@@ -3,7 +3,7 @@
 <html>
     <head>
         <style>
-            @import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,500&display=swap&subset=korean');
+            @import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:500&display=swap&subset=korean');
             html{
                 width: 300px;
                 height: 500px;
@@ -75,25 +75,37 @@
                     line-height: 80px;
                 }
             }
+            button {
+                position: fixed;
+                left: 200px;
+                top: 400px;
+                height: 80px;
+                width: 80px;
+                border-radius: 40px;
+                font-size: 70px;
+                font-weight: 500;
+                color: white;
+                background-color: #F26AC0;
+                border: 0;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                /* 미완 */
+                display: none;
+            }
         </style>
     </head>
     <body>
+        <button>
+            +
+        </button>
         <flexbox>
             <header>
                 <logo>Dalkify</logo>
             </header>
             <div>
-                <ul>
-                    <li>
-                        <span>
-                            ■
-                        </span>
-                        TEST
-                    </li>
-                </ul>
+                
             </div>
         </flexbox>
-        
+
         <load-info>Loading...</load-info>
         <script src="https://unpkg.com/redom"></script>
         <script src="popup.js"></script>
