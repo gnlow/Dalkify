@@ -24,6 +24,9 @@ window.addEventListener("load", () => {
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         chrome.tabs.sendMessage(tabs[0].id, "get", res => {
             packList = res;
+            if(packList.length){
+                document.querySelector("header").classList.add("reeled");
+            }
             ul.update(packList);
         });
     })

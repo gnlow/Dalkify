@@ -3,6 +3,7 @@
 <html>
     <head>
         <style>
+            @import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,500&display=swap&subset=korean');
             html{
                 width: 300px;
                 height: 500px;
@@ -12,6 +13,8 @@
                 width: 300px;
                 height: 500px;
                 margin: 0;
+                font-family: 'Noto Sans KR', sans-serif;
+                font-weight: 500;
             }
             flexbox {
                 width: 300px;
@@ -23,11 +26,15 @@
             }
             header {
                 text-align: center;
-                height: 80px;
-                line-height: 80px;
+                height: 500px;
+                line-height: 500px;
             }
             header.reel {
                 animation: 1s reel both;
+            }
+            header.reeled {
+                height: 80px;
+                line-height: 80px;
             }
             logo {
                 font-size: 50px;
