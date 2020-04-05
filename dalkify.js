@@ -202,10 +202,8 @@ var dalkify = (function (exports, dalkak) {
             }); };
             Entry.block["func_dalk__" + packID + "__" + block.name].func = func;
             Entry.block["func_dalk__" + packID + "__" + block.name].paramsKeyMap = paramsKeyMap;
-            if (pack.color) {
-                Entry.block["func_dalk__" + packID + "__" + block.name].color = "#" + pack.color.toString(16);
-                Entry.block["func_dalk__" + packID + "__" + block.name].outerLine = "#00000000";
-            }
+            Entry.block["func_dalk__" + packID + "__" + block.name].color = "#" + (pack.color || 0xF56EC1).toString(16);
+            Entry.block["func_dalk__" + packID + "__" + block.name].outerLine = "#00000000";
         });
         if ((_c = pack.on) === null || _c === void 0 ? void 0 : _c.mount) {
             pack.on.mount();
