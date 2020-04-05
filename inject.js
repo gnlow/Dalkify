@@ -13,6 +13,14 @@ if ("Entry" in window && Entry.variableContainer) {
             window.postMessage({type: "new", dalkify: true}, "*");
             dalkLog("🏁 inject start");
             var packList = Entry.variableContainer.getListByName("dalk_pack").getArray().map(o => o.data);
+            document.querySelector(".entrylmsModalCommon").style.whiteSpace = "pre-line";
+            if(await entrylms.confirm(
+`작품에서 다음 확장기능을 불러오려고 합니다.
+"${packList.join(`"\n"`)}"
+불러오시겠습니까? `
+            , "Dalkify") == false){
+                throw "Rejected";
+            }
             let i = 0;
             for (var packName of packList) {
                 i++;
